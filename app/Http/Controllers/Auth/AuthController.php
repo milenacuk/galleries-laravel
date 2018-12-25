@@ -36,6 +36,7 @@ class AuthController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
 
+        return $this->login($request);
         
     }
 }
