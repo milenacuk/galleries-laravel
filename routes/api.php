@@ -24,3 +24,15 @@ Route::group([
     Route::post('/login', 'AuthController@login');
     Route::post('register', 'AuthController@register');
 });
+
+
+Route::resource('galleries',GalleriesController::class);
+
+// Route::middleware('auth:api')->group(function(){
+//     Route::resource('galleries',GalleriesController::class);
+// });
+
+// Route::middleware('auth:api')->group(function(){
+//     Route::resource('galleries/$id',"GalleriesController@show");
+// });
+// Route::get('galleries/$id',"GalleriesController@show");
