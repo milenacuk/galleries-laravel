@@ -8,21 +8,21 @@ use App\Http\Requests\GalleryRequest;
 
 class GalleriesController extends Controller
 {
-    // public function __construct(){
-    //     $this->middleware('auth:api',['except'=>['index','show']]);
-    // }
+    public function __construct(){
+        $this->middleware('auth:api',['except'=>['index','show']]);
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        
-        return Gallery::with('images','user')->orderBy('created_at','desc')->paginate(10);
-        // return Gallery::latest()->get();
-        
+    public function index(Request $request)
+    {      
+        return Gallery::getGalleries($request);  
+        // return Gallery::with('images','user')->latest()->paginate(10);
+        // return Gallery::latest()->get();        
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -53,7 +53,8 @@ class GalleriesController extends Controller
      */
     public function show(Gallery $gallery)
     {
-         return Gallery::with('user','images')->findOrFail($gallery);
+       
+         return $gallery->load(['user','images']);
     }
 
     /**
