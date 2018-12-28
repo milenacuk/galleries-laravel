@@ -7,11 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Gallery extends Model
 {
     protected $fillable = [
-        'title', 'description'
+        'title', 'description', 'user_id' 
     ];
-    protected $hidden = [
-        'user_id' 
-    ];
+    protected $table = 'galleries';
+
     public function user(){
         return $this->belongsTo(User::class);
     }
@@ -28,20 +27,21 @@ class Gallery extends Model
         if($user) {
             $query->where('user_id', $user);
         }
-
-        if($term) {
-            $query->whereHas('user', function($query) use ($term){
-                $query->where('title', 'like', '%' . $term . '%')
-                        ->orWhere('description', 'like', '%' . $term . '%')
-                        ->orWhere('first_name', 'like', '%' . $term . '%')
-                        ->orWhere('last_name', 'like', '%' . $term . '%');
-            });
-        }
-        $count = $query->count();
-        $galleries = $query->skip(($page-1) * 10)
-                            ->take(10)
-                            ->orderBy('created_at','desc')
-                            ->get();
-        return compact("galleries", "count");
+       
+        
+            if($term) {
+                $query->where(function($query) use ($term){
+                    $query->where('title', 'like', '%'.$term.'%')
+                      ->orWhere('description','like', '%'.$term.'%')
+                      ->orWhereHas('user', function($q) use ($term){
+                          $q->where('first_name', 'like', '%'.$term.'%')
+                            ->orWhere('last_name','like', '%'.$term.'%');
+                      });
+                    });
+                }
+        
+       
+        $galleries = $query->latest()->paginate(10);
+        return compact("galleries");
     }
 }

@@ -55,6 +55,8 @@ class GalleriesController extends Controller
     {
        
          return $gallery->load(['user','images']);
+        
+        
     }
 
     /**
