@@ -28,6 +28,8 @@ Route::group([
 
 Route::resource('galleries',GalleriesController::class);
 
+Route::get('authors/{id}', "AuthorController@show");
+
 // Route::middleware('auth:api')->group(function(){
 //     Route::resource('galleries',GalleriesController::class);
 // });

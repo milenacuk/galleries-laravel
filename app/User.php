@@ -28,6 +28,12 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password', 'remember_token',
     ];
+    public function galleries(){
+        return $this->hasMany(Gallery::class);
+    }
+    public function images(){
+        return $this->hasMany(Image::class);
+    }
     
     public function getJWTIdentifier()
     {
