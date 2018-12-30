@@ -27,6 +27,10 @@ Route::group([
 
 
 Route::resource('galleries',GalleriesController::class);
+//Route::post('galleries', 'GalleriesController@store');
+
+Route::post('galleries/{id}/comments', 'CommentsController@store');
+Route::delete('/comments/{id}', 'CommentsController@destroy');
 
 Route::get('authors/{id}', "AuthorController@show");
 Route::get('authors-galeries/{id}', "AuthorController@show");

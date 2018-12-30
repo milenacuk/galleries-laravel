@@ -10,12 +10,16 @@ class Gallery extends Model
         'title', 'description', 'user_id' 
     ];
     protected $table = 'galleries';
+    
 
     public function user(){
         return $this->belongsTo(User::class);
     }
     public function images(){
         return $this->hasMany(Image::class);
+    }
+    public function comments(){
+        return $this->hasMany(Comment::class);
     }
     public static function getGalleries($request, $user = null) 
     {

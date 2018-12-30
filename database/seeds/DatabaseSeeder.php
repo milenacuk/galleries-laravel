@@ -9,5 +9,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(GalleriesSeeder::class);
         $this->call(ImagesSeeder::class);
+        $this->call(CommentsSeeder::class);
     }
 }

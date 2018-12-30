@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Gallery;
 use Illuminate\Http\Request;
 use App\Http\Requests\GalleryRequest;
+use App\Image;
+use Illuminate\Support\Facades\Auth;
+
 
 class GalleriesController extends Controller
 {
@@ -19,8 +22,7 @@ class GalleriesController extends Controller
     public function index(Request $request)
     {      
         return Gallery::getGalleries($request);  
-        // return Gallery::with('images','user')->latest()->paginate(10);
-        // return Gallery::latest()->get();        
+           
     }
     
 
@@ -41,8 +43,28 @@ class GalleriesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(GalleryRequest $request)
-    {
-        return Gallery::create($request->only(['title','description','images']));
+    { 
+        $gallery = new Gallery();
+        $gallery->title = $request->input('title');
+        $gallery->description = $request->input('description');
+        $gallery->user_id = auth()->user()->id;
+        $gallery->save();
+
+        
+
+        $images = $request->input('images');
+        $allImages = [];
+
+        foreach($images as $image){
+            $allImages[] = new Image($image);         
+        }
+        $gallery->images()->saveMany($allImages);
+
+        // return $gallery;
+        return response()->json([
+            'gallery' => $gallery,
+            'user' => auth()->user()
+        ]);
     }
 
     /**
@@ -54,7 +76,7 @@ class GalleriesController extends Controller
     public function show(Gallery $gallery)
     {
        
-         return $gallery->load(['user','images']);
+         return $gallery->load(['user','images','comments','comments.user']);
         
         
     }
@@ -80,7 +102,7 @@ class GalleriesController extends Controller
     public function update(Request $request, Gallery $gallery)
     {
         $gallery->update(
-            $request->only(['title','description','user_id'])
+            $request->only(['title','description'])
         );
         return $gallery;
     }
